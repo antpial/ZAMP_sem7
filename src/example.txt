@@ -1,0 +1,15 @@
+# define KOZA BEEEEE
+
+to jest zwykly tekst
+to tez jest zwyklu tekst
+
+podemna jest komentarz:
+/*
+*
+*to jest komentarz
+*
+*/
+nademna jest komentarz
+
+Koza robi jak koza:
+Koza robi: KOZA
