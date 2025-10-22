@@ -10,7 +10,10 @@ using namespace std;
 int main()
 {
   
-    // Testuje pre procesor
+  //
+  // Testuje pre procesor
+  // 
+
     std::istringstream stream;
     if (preProc("src/example.txt", stream)) {
         std::cout << "Preprocessing OK\n";
@@ -21,6 +24,10 @@ int main()
     } else {
         std::cout << "Preprocessing failed\n";
     }
+
+  //
+  // testuje biblioteke libInterp4Move.so
+  //
 
   void *pLibHnd_Move = dlopen("libInterp4Move.so",RTLD_LAZY);
   AbstractInterp4Command *(*pCreateCmd_Move)(void);
@@ -53,4 +60,41 @@ int main()
   delete pCmd;
 
   dlclose(pLibHnd_Move);
+
+
+  //
+  // testuje biblioteke libInterp4Rotate.so
+  //
+
+  void *pLibHnd_Rotate = dlopen("libInterp4Rotate.so",RTLD_LAZY);
+  AbstractInterp4Command *(*pCreateCmd_Rotate)(void);
+
+  if (!pLibHnd_Rotate) {
+    cerr << "!!! Brak biblioteki: Interp4Rotate.so" << endl;
+    return 1;
+  }
+
+
+  pFun = dlsym(pLibHnd_Rotate,"CreateCmd");
+  if (!pFun) {
+    cerr << "!!! Nie znaleziono funkcji CreateCmd" << endl;
+    return 1;
+  }
+  pCreateCmd_Rotate = reinterpret_cast<AbstractInterp4Command* (*)(void)>(pFun);
+
+
+  pCmd = pCreateCmd_Rotate();
+
+  cout << endl;
+  cout << pCmd->GetCmdName() << endl;
+  cout << endl;
+  pCmd->PrintSyntax();
+  cout << endl;
+  pCmd->PrintCmd();
+  cout << endl;
+  
+  delete pCmd;
+
+  dlclose(pLibHnd_Rotate);
+
 }
