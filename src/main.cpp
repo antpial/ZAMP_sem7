@@ -2,7 +2,7 @@
 #include <dlfcn.h>
 #include <cassert>
 #include "AbstractInterp4Command.hh"
-#include "../plugin/inc/PreProc.hh"
+#include "PreProc.hh"
 
 using namespace std;
 
@@ -10,6 +10,7 @@ using namespace std;
 int main()
 {
   
+    // Testuje pre procesor
     std::istringstream stream;
     if (preProc("src/example.txt", stream)) {
         std::cout << "Preprocessing OK\n";

@@ -1,6 +1,6 @@
 
 
-__start__: obj __lines_for_space__ ../libs/libInterp4Move.so ../libs/libInterp4Rotate.so ../libs/libPreProc.so
+__start__: obj __lines_for_space__ ../libs/libInterp4Move.so ../libs/libInterp4Rotate.so
 	@echo "  Tworzenie wtyczki zakonczone."
 	@echo
 
@@ -30,12 +30,6 @@ __lines_for_space__:
 	@echo
 	
 
-../libs/libPreProc.so: obj/PreProc.o
-	g++ ${LDFLAGS} -o ../libs/libPreProc.so obj/PreProc.o
-	@echo
-	@echo "  Wtyczka PreProc została utworzona."
-	@echo
-
 
 obj/Interp4Move.o: src/Interp4Move.cpp ../inc/AbstractInterp4Command.hh\
                    ../inc/AbstractScene.hh ../inc/AbstractComChannel.hh\
@@ -47,10 +41,6 @@ obj/Interp4Rotate.o: src/Interp4Rotate.cpp ../inc/AbstractInterp4Command.hh\
                    inc/Interp4Rotate.hh 
 	g++ -c ${CPPFLAGS} -o obj/Interp4Rotate.o src/Interp4Rotate.cpp
 	
-	
-obj/PreProc.o: src/PreProc.cpp inc/PreProc.hh
-	g++ -c ${CPPFLAGS} -o obj/PreProc.o src/PreProc.cpp
-
 
 clean:
 	rm -f obj/*
