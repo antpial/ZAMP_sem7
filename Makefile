@@ -1,4 +1,4 @@
-__start__: obj __lines_for_space__ interp __plugin__
+__start__: obj __lines_for_space__ interp xmlinterp4config __plugin__
 	export LD_LIBRARY_PATH="./libs"; ./interp
 
 obj:
@@ -25,6 +25,9 @@ LDFLAGS=-Wall
 interp: obj/main.o
 	g++ ${LDFLAGS} -o interp  obj/main.o obj/PreProc.o -Llibs -ldl -Wl,-rpath=libs
 
+xmlinterp4config: obj/xmlinterp.o obj/main.o obj/PreProc.o
+	g++ ${LDFLAGS} -o xmlinterp4config  obj/xmlinterp.o\
+                                     obj/main.o obj/PreProc.o -lxerces-c
 
 obj/main.o: src/main.cpp inc/AbstractInterp4Command.hh inc/AbstractScene.hh\
             inc/AbstractComChannel.hh
@@ -32,6 +35,9 @@ obj/main.o: src/main.cpp inc/AbstractInterp4Command.hh inc/AbstractScene.hh\
 
 obj/PreProc.o: src/PreProc.cpp
 	g++ -c ${CPPFLAGS} -o obj/PreProc.o src/PreProc.cpp
+
+obj/xmlinterp.o: src/xmlinterp.cpp inc/xmlinterp.hh
+	g++ -c ${CPPFLAGS} -o obj/xmlinterp.o src/xmlinterp.cpp
 
 
 doc:
