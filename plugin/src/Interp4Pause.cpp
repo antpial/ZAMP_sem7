@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Interp4Move.hh"
+#include "Interp4Pause.hh"
 
 
 using std::cout;
@@ -8,7 +8,7 @@ using std::endl;
 
 extern "C" {
   AbstractInterp4Command* CreateCmd(void);
-  const char* GetCmdName() { return "Move"; }
+  const char* GetCmdName() { return "Pause"; }
 }
 
 
@@ -21,33 +21,33 @@ extern "C" {
  */
 AbstractInterp4Command* CreateCmd(void)
 {
-  return Interp4Move::CreateCmd();
+  return Interp4Pause::CreateCmd();
 }
 
 
 /*!
  *
  */
-Interp4Move::Interp4Move(): _Speed_mmS(0)
+Interp4Pause::Interp4Pause(): _Speed_mmS(0)
 {}
 
 
 /*!
  *
  */
-void Interp4Move::PrintCmd() const
+void Interp4Pause::PrintCmd() const
 {
   /*
    *  Tu trzeba napisać odpowiednio zmodyfikować kod poniżej.
    */
-  cout << GetCmdName() << " " << _Speed_mmS  << " 10  2" << endl;
+  cout << GetCmdName() << " " << "3.0" << endl;
 }
 
 
 /*!
  *
  */
-const char* Interp4Move::GetCmdName() const
+const char* Interp4Pause::GetCmdName() const
 {
   return ::GetCmdName();
 }
@@ -56,7 +56,7 @@ const char* Interp4Move::GetCmdName() const
 /*!
  *
  */
-bool Interp4Move::ExecCmd( AbstractScene      &rScn, 
+bool Interp4Pause::ExecCmd( AbstractScene      &rScn, 
                            const char         *sMobObjName,
 			   AbstractComChannel &rComChann
 			 )
@@ -71,7 +71,7 @@ bool Interp4Move::ExecCmd( AbstractScene      &rScn,
 /*!
  *
  */
-bool Interp4Move::ReadParams(std::istream& Strm_CmdsList)
+bool Interp4Pause::ReadParams(std::istream& Strm_CmdsList)
 {
   /*
    *  Tu trzeba napisać odpowiedni kod.
@@ -83,16 +83,16 @@ bool Interp4Move::ReadParams(std::istream& Strm_CmdsList)
 /*!
  *
  */
-AbstractInterp4Command* Interp4Move::CreateCmd()
+AbstractInterp4Command* Interp4Pause::CreateCmd()
 {
-  return new Interp4Move();
+  return new Interp4Pause();
 }
 
 
 /*!
  *
  */
-void Interp4Move::PrintSyntax() const
+void Interp4Pause::PrintSyntax() const
 {
-  cout << "   Move  NazwaObiektu  Szybkosc[m/s]  DlugoscDrogi[m]" << endl;
+  cout << "   Pause Czas_pauzy_ms" << endl;
 }

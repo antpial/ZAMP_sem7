@@ -220,6 +220,42 @@ int main()
 
   dlclose(pLibHnd_Set);
 
+   //
+  // testuje biblioteke libInterp4Pause.so
+  //
+
+  void *pLibHnd_Pause = dlopen("libInterp4Pause.so",RTLD_LAZY);
+  AbstractInterp4Command *(*pCreateCmd_Pause)(void);
+
+  if (!pLibHnd_Pause) {
+    cerr << "!!! Brak biblioteki: Interp4Pause.so" << endl;
+    return 1;
+  }
+
+
+  pFun = dlsym(pLibHnd_Pause,"CreateCmd");
+  if (!pFun) {
+    cerr << "!!! Nie znaleziono funkcji CreateCmd" << endl;
+    return 1;
+  }
+  pCreateCmd_Pause = reinterpret_cast<AbstractInterp4Command* (*)(void)>(pFun);
+
+
+  pCmd = pCreateCmd_Pause();
+
+  cout << endl;
+  cout << pCmd->GetCmdName() << endl;
+  cout << endl;
+  pCmd->PrintSyntax();
+  cout << endl;
+  pCmd->PrintCmd();
+  cout << endl;
+  
+  delete pCmd;
+
+  dlclose(pLibHnd_Pause);
+
+
   // testuje zaciaganie z xml
   Configuration   Config;
 
