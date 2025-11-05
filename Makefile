@@ -22,8 +22,8 @@ LDFLAGS=-Wall
 
 
 
-interp: obj/main.o
-	g++ ${LDFLAGS} -o interp  obj/main.o obj/PreProc.o -Llibs -ldl -Wl,-rpath=libs
+interp: obj/main.o obj/PreProc.o obj/xmlinterp.o
+	g++ ${LDFLAGS} -o interp  obj/main.o obj/PreProc.o obj/xmlinterp.o -Llibs -ldl -lxerces-c -Wl,-rpath=libs
 
 xmlinterp4config: obj/xmlinterp.o obj/main.o obj/PreProc.o
 	g++ ${LDFLAGS} -o xmlinterp4config  obj/xmlinterp.o\
