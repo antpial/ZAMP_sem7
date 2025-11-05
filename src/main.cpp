@@ -185,6 +185,41 @@ int main()
 
   dlclose(pLibHnd_Rotate);
 
+   //
+  // testuje biblioteke libInterp4Set.so
+  //
+
+  void *pLibHnd_Set = dlopen("libInterp4Set.so",RTLD_LAZY);
+  AbstractInterp4Command *(*pCreateCmd_Set)(void);
+
+  if (!pLibHnd_Set) {
+    cerr << "!!! Brak biblioteki: Interp4Set.so" << endl;
+    return 1;
+  }
+
+
+  pFun = dlsym(pLibHnd_Set,"CreateCmd");
+  if (!pFun) {
+    cerr << "!!! Nie znaleziono funkcji CreateCmd" << endl;
+    return 1;
+  }
+  pCreateCmd_Set = reinterpret_cast<AbstractInterp4Command* (*)(void)>(pFun);
+
+
+  pCmd = pCreateCmd_Set();
+
+  cout << endl;
+  cout << pCmd->GetCmdName() << endl;
+  cout << endl;
+  pCmd->PrintSyntax();
+  cout << endl;
+  pCmd->PrintCmd();
+  cout << endl;
+  
+  delete pCmd;
+
+  dlclose(pLibHnd_Set);
+
   // testuje zaciaganie z xml
   Configuration   Config;
 
