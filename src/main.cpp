@@ -11,6 +11,7 @@
 #include <iostream>
 #include <list>
 #include <map>
+#include "LibInterface.hh"
 
 using namespace std;
 using namespace xercesc;
@@ -116,14 +117,16 @@ int main()
         std::cout << "Preprocessing failed\n";
     }
 
+    ///////////////////////////////////////
     // Zaciagam i testuje wtyczki (pluginy)
+    ///////////////////////////////////////
 
     void* pLibHnd; // uchwyt do bibliotek dynamicznych
     std::vector <void*>  libHandles; // wektor uchwytow do wczytanych bibliotek
     void *pFun; // uchwyt do funkcji w bibliotekach dynamicznych
     AbstractInterp4Command *(*pCreateCmd)(void); // wskaźnik do funkcji tworzącej obiekt polecenia
     AbstractInterp4Command *pCmd;
-    map<std::string, AbstractInterp4Command*> commandsMap;
+    map<std::string, LibInterface* > LibInterfacesMap;
 
     for(std::string plugin : Config.pluginsVec) {
 
@@ -146,8 +149,16 @@ int main()
       }
       pCreateCmd = reinterpret_cast<AbstractInterp4Command* (*)(void)>(pFun); // rzutowanie na odpowiedni typ
 
+      // Tworze obiekt polecenia poprzez wywołanie funkcji CreateCmd i dodaje do mapy
       pCmd = pCreateCmd(); // tworze obiekt polecenia np. MOVE jak w pluginie Interp4Move,cpp
-      commandsMap[pCmd->GetCmdName()] = pCmd;
+      
+      // Tworze strukturę LibInterface i dodaje do mapy zeby potem wywolywac
+      LibInterface* libIntf = new LibInterface();
+      libIntf->LibHandler = pLibHnd;
+      libIntf->CmdName = pCmd->GetCmdName();
+      libIntf->_pCreateCmd = pCreateCmd;
+      LibInterfacesMap[libIntf->CmdName] = libIntf;
+
 
       // Testuje czy polecenie działa poprawnie
       cout << endl;
@@ -162,11 +173,15 @@ int main()
     }
 
 
+  ////////////////////////////////////////
   // Usuwam wtyczki
-  int i = 1;
-  for(void* PluginHandler : libHandles) {
-    cout << "Usuwanie pluginu " << i++ << endl;
-    dlclose(PluginHandler);
+  ///////////////////////////////////////
+
+  std::cout << "Usuwanie wtyczek...\n";
+  for (const auto& [key, value] : LibInterfacesMap) {
+      std::cout << "Usuwam " << key << "\n";
+      dlclose(value->LibHandler);
+      delete value;
   }
 
   // testuje zaciaganie z xml
