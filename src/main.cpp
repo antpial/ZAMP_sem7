@@ -100,7 +100,7 @@ bool ReadFile(const char* sFileName, Configuration &rConfig)
 int main()
 {
 
-  Configuration   Config;
+  Configuration Config;
   
   //
   // Testuje pre procesor
@@ -149,7 +149,7 @@ int main()
       }
       pCreateCmd = reinterpret_cast<AbstractInterp4Command* (*)(void)>(pFun); // rzutowanie na odpowiedni typ
 
-      // Tworze obiekt polecenia poprzez wywołanie funkcji CreateCmd i dodaje do mapy
+      // Tworze obiekt do spisania nazwy polecenia
       pCmd = pCreateCmd(); // tworze obiekt polecenia np. MOVE jak w pluginie Interp4Move,cpp
       
       // Tworze strukturę LibInterface i dodaje do mapy zeby potem wywolywac
@@ -159,17 +159,23 @@ int main()
       libIntf->_pCreateCmd = pCreateCmd;
       LibInterfacesMap[libIntf->CmdName] = libIntf;
 
-
-      // Testuje czy polecenie działa poprawnie
-      cout << endl;
-      cout << pCmd->GetCmdName() << endl;
-      cout << endl;
-      pCmd->PrintSyntax();
-      cout << endl;
-      pCmd->PrintCmd();
-      cout << endl;
-
       delete pCmd;
+    }
+
+    for (const auto& [key, value] : LibInterfacesMap) {
+        std::cout << "Wtyczka dla polecenia: " << key << "\n";
+        // Tworze obiekt polecenia
+        AbstractInterp4Command* cmd = value->_pCreateCmd();
+        // Testuje czy polecenie działa poprawnie
+        std::cout << std::endl;
+        std::cout << cmd->GetCmdName() << std::endl;
+        std::cout << std::endl;
+        cmd->PrintSyntax();
+        std::cout << std::endl;
+        cmd->PrintCmd();
+        std::cout << std::endl;
+
+        delete cmd;
     }
 
 
@@ -179,7 +185,7 @@ int main()
 
   std::cout << "Usuwanie wtyczek...\n";
   for (const auto& [key, value] : LibInterfacesMap) {
-      std::cout << "Usuwam " << key << "\n";
+      std::cout << "  Usuwam " << key << "\n";
       dlclose(value->LibHandler);
       delete value;
   }
