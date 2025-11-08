@@ -97,6 +97,8 @@ bool ReadFile(const char* sFileName, Configuration &rConfig)
 
 int main()
 {
+
+  Configuration   Config;
   
   //
   // Testuje pre procesor
@@ -113,153 +115,53 @@ int main()
         std::cout << "Preprocessing failed\n";
     }
 
-  //
-  // testuje biblioteke libInterp4Move.so
-  //
+    // Zaciagam i testuje wtyczki (pluginy)
 
-  void *pLibHnd_Move = dlopen("libInterp4Move.so",RTLD_LAZY);
-  AbstractInterp4Command *(*pCreateCmd_Move)(void);
-  void *pFun;
+    void* pLibHnd; // uchwyt do bibliotek dynamicznych
+    void *pFun; // uchwyt do funkcji w bibliotekach dynamicznych
+    AbstractInterp4Command *(*pCreateCmd)(void); // wskaźnik do funkcji tworzącej obiekt polecenia
+    AbstractInterp4Command *pCmd;
 
-  if (!pLibHnd_Move) {
-    cerr << "!!! Brak biblioteki: Interp4Move.so" << endl;
-    return 1;
-  }
+    for(std::string plugin : Config.pluginsVec) {
 
+      // sprawdzam czy wtyczki wczytane z konfiguracji sa poprawne
+      std::cout << "Plugin: " << plugin << "\n";
 
-  pFun = dlsym(pLibHnd_Move,"CreateCmd");
-  if (!pFun) {
-    cerr << "!!! Nie znaleziono funkcji CreateCmd" << endl;
-    return 1;
-  }
-  pCreateCmd_Move = reinterpret_cast<AbstractInterp4Command* (*)(void)>(pFun);
+      // Tworze uchwyty dla kolejnych pluginow
+      pLibHnd = dlopen(plugin.c_str(),RTLD_LAZY);
+      if (!pLibHnd) {
+        cerr << "!!! Brak biblioteki: " << plugin << " !" << endl;
+        return 1;
+      }
+      
+      // Pobieram adres funkcji CreateCmd z biblioteki
+      pFun = dlsym(pLibHnd,"CreateCmd");
+      if (!pFun) {
+        cerr << "!!! Nie znaleziono funkcji CreateCmd" << endl;
+        return 1;
+      }
 
+      // dowiedz sie wiecej o tym fragmencie
+      pCreateCmd = reinterpret_cast<AbstractInterp4Command* (*)(void)>(pFun); // &&&& zapytaj czemu musimy castowac
+      pCmd = pCreateCmd();
 
-  AbstractInterp4Command *pCmd = pCreateCmd_Move();
+      // Testuje czy polecenie działa poprawnie
+      cout << endl;
+      cout << pCmd->GetCmdName() << endl;
+      cout << endl;
+      pCmd->PrintSyntax();
+      cout << endl;
+      pCmd->PrintCmd();
+      cout << endl;
 
-  cout << endl;
-  cout << pCmd->GetCmdName() << endl;
-  cout << endl;
-  pCmd->PrintSyntax();
-  cout << endl;
-  pCmd->PrintCmd();
-  cout << endl;
-  
-  delete pCmd;
+      delete pCmd;
 
-  dlclose(pLibHnd_Move);
-
-
-  //
-  // testuje biblioteke libInterp4Rotate.so
-  //
-
-  void *pLibHnd_Rotate = dlopen("libInterp4Rotate.so",RTLD_LAZY);
-  AbstractInterp4Command *(*pCreateCmd_Rotate)(void);
-
-  if (!pLibHnd_Rotate) {
-    cerr << "!!! Brak biblioteki: Interp4Rotate.so" << endl;
-    return 1;
-  }
-
-
-  pFun = dlsym(pLibHnd_Rotate,"CreateCmd");
-  if (!pFun) {
-    cerr << "!!! Nie znaleziono funkcji CreateCmd" << endl;
-    return 1;
-  }
-  pCreateCmd_Rotate = reinterpret_cast<AbstractInterp4Command* (*)(void)>(pFun);
-
-
-  pCmd = pCreateCmd_Rotate();
-
-  cout << endl;
-  cout << pCmd->GetCmdName() << endl;
-  cout << endl;
-  pCmd->PrintSyntax();
-  cout << endl;
-  pCmd->PrintCmd();
-  cout << endl;
-  
-  delete pCmd;
-
-  dlclose(pLibHnd_Rotate);
-
-   //
-  // testuje biblioteke libInterp4Set.so
-  //
-
-  void *pLibHnd_Set = dlopen("libInterp4Set.so",RTLD_LAZY);
-  AbstractInterp4Command *(*pCreateCmd_Set)(void);
-
-  if (!pLibHnd_Set) {
-    cerr << "!!! Brak biblioteki: Interp4Set.so" << endl;
-    return 1;
-  }
-
-
-  pFun = dlsym(pLibHnd_Set,"CreateCmd");
-  if (!pFun) {
-    cerr << "!!! Nie znaleziono funkcji CreateCmd" << endl;
-    return 1;
-  }
-  pCreateCmd_Set = reinterpret_cast<AbstractInterp4Command* (*)(void)>(pFun);
-
-
-  pCmd = pCreateCmd_Set();
-
-  cout << endl;
-  cout << pCmd->GetCmdName() << endl;
-  cout << endl;
-  pCmd->PrintSyntax();
-  cout << endl;
-  pCmd->PrintCmd();
-  cout << endl;
-  
-  delete pCmd;
-
-  dlclose(pLibHnd_Set);
-
-   //
-  // testuje biblioteke libInterp4Pause.so
-  //
-
-  void *pLibHnd_Pause = dlopen("libInterp4Pause.so",RTLD_LAZY);
-  AbstractInterp4Command *(*pCreateCmd_Pause)(void);
-
-  if (!pLibHnd_Pause) {
-    cerr << "!!! Brak biblioteki: Interp4Pause.so" << endl;
-    return 1;
-  }
-
-
-  pFun = dlsym(pLibHnd_Pause,"CreateCmd");
-  if (!pFun) {
-    cerr << "!!! Nie znaleziono funkcji CreateCmd" << endl;
-    return 1;
-  }
-  pCreateCmd_Pause = reinterpret_cast<AbstractInterp4Command* (*)(void)>(pFun);
-
-
-  pCmd = pCreateCmd_Pause();
-
-  cout << endl;
-  cout << pCmd->GetCmdName() << endl;
-  cout << endl;
-  pCmd->PrintSyntax();
-  cout << endl;
-  pCmd->PrintCmd();
-  cout << endl;
-  
-  delete pCmd;
-
-  dlclose(pLibHnd_Pause);
-
+      dlclose(pLibHnd);
+    }
 
   // testuje zaciaganie z xml
-  Configuration   Config;
 
-  if (!ReadFile("config/config.xml",Config)) return 1;
+  // if (!ReadFile("config/config.xml",Config)) return 1;
 
 
 }
