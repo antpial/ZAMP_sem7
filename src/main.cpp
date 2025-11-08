@@ -97,29 +97,7 @@ bool ReadFile(const char* sFileName, Configuration &rConfig)
 }
 
 
-int main()
-{
-
-  Configuration Config;
-  
-  //
-  // Testuje pre procesor
-  // 
-
-    std::istringstream stream;
-    if (preProc("src/example.txt", stream)) {
-        std::cout << "Preprocessing OK\n";
-        std::string line;
-        while (std::getline(stream, line)) {
-            std::cout << line << "\n";
-        }
-    } else {
-        std::cout << "Preprocessing failed\n";
-    }
-
-    ///////////////////////////////////////
-    // Zaciagam i testuje wtyczki (pluginy)
-    ///////////////////////////////////////
+std::map<std::string, LibInterface*> loadPlugins(Configuration Config){
 
     void* pLibHnd; // uchwyt do bibliotek dynamicznych
     std::vector <void*>  libHandles; // wektor uchwytow do wczytanych bibliotek
@@ -127,7 +105,6 @@ int main()
     AbstractInterp4Command *(*pCreateCmd)(void); // wskaźnik do funkcji tworzącej obiekt polecenia
     AbstractInterp4Command *pCmd;
     map<std::string, LibInterface* > LibInterfacesMap;
-
     for(std::string plugin : Config.pluginsVec) {
 
       // sprawdzam czy wtyczki wczytane z konfiguracji sa poprawne
@@ -137,7 +114,7 @@ int main()
       pLibHnd = dlopen(plugin.c_str(),RTLD_LAZY);
       if (!pLibHnd) {
         cerr << "!!! Brak biblioteki: " << plugin << " !" << endl;
-        return 1;
+        exit(1);
       }
       libHandles.push_back(pLibHnd); // zapisuje uchwyt do wektora na pozniej
       
@@ -145,7 +122,7 @@ int main()
       pFun = dlsym(pLibHnd,"CreateCmd"); // dlsym zwraca voida* dlatego potem trzeba castowac
       if (!pFun) {
         cerr << "!!! Nie znaleziono funkcji CreateCmd" << endl;
-        return 1;
+        exit(1);
       }
       pCreateCmd = reinterpret_cast<AbstractInterp4Command* (*)(void)>(pFun); // rzutowanie na odpowiedni typ
 
@@ -162,6 +139,28 @@ int main()
       delete pCmd;
     }
 
+    return LibInterfacesMap;
+}
+
+
+
+int main()
+{
+
+  Configuration Config;
+
+    ///////////////////////////////////////
+    // Zaciagam wtyczki (pluginy)
+    ///////////////////////////////////////
+
+    std::cout << "Ładowanie wtyczek...\n";
+    map<std::string, LibInterface* > LibInterfacesMap = loadPlugins(Config);
+
+    ///////////////////////////////////////
+    // Testuje czy wtyczki działają poprawnie
+    ///////////////////////////////////////
+
+    std::cout << "\nTestowanie wtyczek...\n";
     for (const auto& [key, value] : LibInterfacesMap) {
         std::cout << "Wtyczka dla polecenia: " << key << "\n";
         // Tworze obiekt polecenia
@@ -180,10 +179,26 @@ int main()
 
 
   ////////////////////////////////////////
+  // Uruchamiam preproces dla pliku z poleceniami
+  ////////////////////////////////////////
+
+    std::istringstream stream;
+    if (preProc("opis_dzialan.cmd", stream)) {
+        std::cout << "Preprocessing OK\n";
+        std::string line;
+        while (std::getline(stream, line)) {
+            std::cout << line << "\n";
+        }
+    } else {
+        std::cout << "Preprocessing failed\n";
+    }
+
+
+  ////////////////////////////////////////
   // Usuwam wtyczki
   ///////////////////////////////////////
 
-  std::cout << "Usuwanie wtyczek...\n";
+  std::cout << "\nUsuwanie wtyczek...\n";
   for (const auto& [key, value] : LibInterfacesMap) {
       std::cout << "  Usuwam " << key << "\n";
       dlclose(value->LibHandler);
