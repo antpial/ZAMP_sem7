@@ -143,6 +143,18 @@ std::map<std::string, LibInterface*> loadPlugins(Configuration Config){
 }
 
 
+int deletePlugins(std::map<std::string, LibInterface*> LibInterfacesMap){
+
+    for (const auto& [key, value] : LibInterfacesMap) {
+        std::cout << "  Usuwam " << key << "\n";
+        dlclose(value->LibHandler);
+        delete value;
+    }
+
+    return 0;
+}
+
+
 
 int main()
 {
@@ -199,11 +211,7 @@ int main()
   ///////////////////////////////////////
 
   std::cout << "\nUsuwanie wtyczek...\n";
-  for (const auto& [key, value] : LibInterfacesMap) {
-      std::cout << "  Usuwam " << key << "\n";
-      dlclose(value->LibHandler);
-      delete value;
-  }
+  deletePlugins(LibInterfacesMap);
 
   // testuje zaciaganie z xml
 
