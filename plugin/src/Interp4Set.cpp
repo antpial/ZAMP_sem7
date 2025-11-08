@@ -28,7 +28,13 @@ AbstractInterp4Command* CreateCmd(void)
 /*!
  *
  */
-Interp4Set::Interp4Set(): _Speed_mmS(0)
+Interp4Set::Interp4Set(): _nazwa_obiektu("noname"),
+                         _wsp_x(0.0),
+                         _wsp_y(0.0),
+                         _wsp_z(0.0),
+                         _kat_OX(0.0),
+                         _kat_OY(0.0),
+                         _kat_OZ(0.0)
 {}
 
 
@@ -40,7 +46,11 @@ void Interp4Set::PrintCmd() const
   /*
    *  Tu trzeba napisać odpowiednio zmodyfikować kod poniżej.
    */
-  cout << GetCmdName() << " " << "Nazwa" << "1.0 2.0 3.0 0.9 1.1 2.2" << endl;
+  cout << GetCmdName() << " "
+       << _nazwa_obiektu << " "
+       << _wsp_x << " " << _wsp_y << " " << _wsp_z << " "
+       << _kat_OX << " " << _kat_OY << " " << _kat_OZ
+       << endl;
 }
 
 
@@ -76,6 +86,11 @@ bool Interp4Set::ReadParams(std::istream& Strm_CmdsList)
   /*
    *  Tu trzeba napisać odpowiedni kod.
    */
+
+   Strm_CmdsList >> _nazwa_obiektu
+                  >> _wsp_x >> _wsp_y >> _wsp_z
+                  >> _kat_OX >> _kat_OY >> _kat_OZ;
+
   return true;
 }
 

@@ -196,17 +196,30 @@ int main()
   std::cout << "\nTestowanie wtyczek...\n";
   testPlugins(LibInterfacesMap);
 
-////////////////////////////////////////
-// Uruchamiam preproces dla pliku z poleceniami
-////////////////////////////////////////
+  ////////////////////////////////////////
+  // Uruchamiam preproces dla pliku z poleceniami
+  ////////////////////////////////////////
+
+  // std::istringstream stream;
+  // if (preProc("opis_dzialan.cmd", stream)) {
+  //     std::cout << "Preprocessing OK\n";
+  //     std::string line;
+  //     while (std::getline(stream, line)) {
+  //         std::cout << line << "\n";
+  //     }
+  // } else {
+  //     std::cout << "Preprocessing failed\n";
+  // }
 
   std::istringstream stream;
   if (preProc("opis_dzialan.cmd", stream)) {
       std::cout << "Preprocessing OK\n";
-      std::string line;
-      while (std::getline(stream, line)) {
-          std::cout << line << "\n";
-      }
+      std::string order;
+      stream >> order;
+      AbstractInterp4Command * cmd = LibInterfacesMap[order]->_pCreateCmd();
+      cmd->ReadParams(stream);
+      cmd->PrintCmd();
+
   } else {
       std::cout << "Preprocessing failed\n";
   }
