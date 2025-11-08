@@ -109,8 +109,8 @@ std::map<std::string, LibInterface*> loadPlugins(Configuration Config){
     map<std::string, LibInterface* > LibInterfacesMap;
     for(std::string plugin : Config.pluginsVec) {
 
-      // sprawdzam czy wtyczki wczytane z konfiguracji sa poprawne
-      std::cout << "Plugin: " << plugin << "\n";
+      // DEBUG: sprawdzam czy wtyczki wczytane z konfiguracji sa poprawne
+      // std::cout << "Plugin: " << plugin << "\n";
 
       // Tworze uchwyty dla kolejnych pluginow
       pLibHnd = dlopen(plugin.c_str(),RTLD_LAZY);
@@ -158,6 +158,8 @@ int deletePlugins(std::map<std::string, LibInterface*> LibInterfacesMap){
 
 int testPlugins(std::map<std::string, LibInterface*> LibInterfacesMap){
 
+    std::cout << "\nTestowanie wtyczek...\n";
+
     for (const auto& [key, value] : LibInterfacesMap) {
         std::cout << "Wtyczka dla polecenia: " << key << "\n";
         // Tworze obiekt polecenia
@@ -188,23 +190,19 @@ int main()
   // Zaciagam wtyczki (pluginy)
   ///////////////////////////////////////
 
-  std::cout << "Ładowanie wtyczek...\n";
+  std::cout << "\nŁadowanie wtyczek...\n";
   map<std::string, LibInterface* > LibInterfacesMap = loadPlugins(Config);
-
-  ///////////////////////////////////////
-  // Testuje czy wtyczki działają poprawnie
-  ///////////////////////////////////////
-
-  std::cout << "\nTestowanie wtyczek...\n";
-  testPlugins(LibInterfacesMap);
+  // DEBUG: test wtyczek
+  // testPlugins(LibInterfacesMap);
 
   ////////////////////////////////////////
-  // Uruchamiam preproces dla pliku z poleceniami
+  // Uruchamiam preproces
   ////////////////////////////////////////
 
-  std::cout << "\nPreprocesuje plik " << COM_FILE_NAME << ":\n";
+  std::cout << "\nPreprocesuje plik " << COM_FILE_NAME << "...\n";
 
-  showPreProcesed(COM_FILE_NAME); // pokazuje przeprocesowany plik
+  // DEBUG: Pokazuje przepreprocesowany plik
+  // showPreProcesed(COM_FILE_NAME);
 
   std::istringstream stream;
   if(not preProc(COM_FILE_NAME, stream)) {
@@ -212,23 +210,30 @@ int main()
       exit(0);
   }
 
+  /////////////////////////////////////////
+  // Realizuje kolejne komendy
+  /////////////////////////////////////////
+
+  AbstractInterp4Command * cmd;
   std::string order;
-  stream >> order;
-  AbstractInterp4Command * cmd = LibInterfacesMap[order]->_pCreateCmd();
+
+  std:: cout << "\nRealizuje kolejne komendy: \n";
+
+  while(stream >> order){
+  cmd = LibInterfacesMap[order]->_pCreateCmd();
   cmd->ReadParams(stream);
   cmd->PrintCmd();
-
+  }
 
 
 ////////////////////////////////////////
 // Usuwam wtyczki
 ///////////////////////////////////////
 
-std::cout << "\nUsuwanie wtyczek...\n";
+std::cout << "\n\nUsuwanie wtyczek...\n";
 deletePlugins(LibInterfacesMap);
 
 // testuje zaciaganie z xml
-
 // if (!ReadFile("config/config.xml",Config)) return 1;
 
 
