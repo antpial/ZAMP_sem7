@@ -10,6 +10,7 @@
 #include "xmlinterp.hh"
 #include <iostream>
 #include <list>
+#include <map>
 
 using namespace std;
 using namespace xercesc;
@@ -118,9 +119,11 @@ int main()
     // Zaciagam i testuje wtyczki (pluginy)
 
     void* pLibHnd; // uchwyt do bibliotek dynamicznych
+    std::vector <void*>  libHandles; // wektor uchwytow do wczytanych bibliotek
     void *pFun; // uchwyt do funkcji w bibliotekach dynamicznych
     AbstractInterp4Command *(*pCreateCmd)(void); // wskaźnik do funkcji tworzącej obiekt polecenia
     AbstractInterp4Command *pCmd;
+    map<std::string, AbstractInterp4Command*> commandsMap;
 
     for(std::string plugin : Config.pluginsVec) {
 
@@ -133,17 +136,18 @@ int main()
         cerr << "!!! Brak biblioteki: " << plugin << " !" << endl;
         return 1;
       }
+      libHandles.push_back(pLibHnd); // zapisuje uchwyt do wektora na pozniej
       
       // Pobieram adres funkcji CreateCmd z biblioteki
-      pFun = dlsym(pLibHnd,"CreateCmd");
+      pFun = dlsym(pLibHnd,"CreateCmd"); // dlsym zwraca voida* dlatego potem trzeba castowac
       if (!pFun) {
         cerr << "!!! Nie znaleziono funkcji CreateCmd" << endl;
         return 1;
       }
+      pCreateCmd = reinterpret_cast<AbstractInterp4Command* (*)(void)>(pFun); // rzutowanie na odpowiedni typ
 
-      // dowiedz sie wiecej o tym fragmencie
-      pCreateCmd = reinterpret_cast<AbstractInterp4Command* (*)(void)>(pFun); // &&&& zapytaj czemu musimy castowac
-      pCmd = pCreateCmd();
+      pCmd = pCreateCmd(); // tworze obiekt polecenia np. MOVE jak w pluginie Interp4Move,cpp
+      commandsMap[pCmd->GetCmdName()] = pCmd;
 
       // Testuje czy polecenie działa poprawnie
       cout << endl;
@@ -155,9 +159,15 @@ int main()
       cout << endl;
 
       delete pCmd;
-
-      dlclose(pLibHnd);
     }
+
+
+  // Usuwam wtyczki
+  int i = 1;
+  for(void* PluginHandler : libHandles) {
+    cout << "Usuwanie pluginu " << i++ << endl;
+    dlclose(PluginHandler);
+  }
 
   // testuje zaciaganie z xml
 
