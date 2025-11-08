@@ -154,25 +154,8 @@ int deletePlugins(std::map<std::string, LibInterface*> LibInterfacesMap){
     return 0;
 }
 
+int testPlugins(std::map<std::string, LibInterface*> LibInterfacesMap){
 
-
-int main()
-{
-
-  Configuration Config;
-
-    ///////////////////////////////////////
-    // Zaciagam wtyczki (pluginy)
-    ///////////////////////////////////////
-
-    std::cout << "Ładowanie wtyczek...\n";
-    map<std::string, LibInterface* > LibInterfacesMap = loadPlugins(Config);
-
-    ///////////////////////////////////////
-    // Testuje czy wtyczki działają poprawnie
-    ///////////////////////////////////////
-
-    std::cout << "\nTestowanie wtyczek...\n";
     for (const auto& [key, value] : LibInterfacesMap) {
         std::cout << "Wtyczka dla polecenia: " << key << "\n";
         // Tworze obiekt polecenia
@@ -189,33 +172,56 @@ int main()
         delete cmd;
     }
 
-
-  ////////////////////////////////////////
-  // Uruchamiam preproces dla pliku z poleceniami
-  ////////////////////////////////////////
-
-    std::istringstream stream;
-    if (preProc("opis_dzialan.cmd", stream)) {
-        std::cout << "Preprocessing OK\n";
-        std::string line;
-        while (std::getline(stream, line)) {
-            std::cout << line << "\n";
-        }
-    } else {
-        std::cout << "Preprocessing failed\n";
-    }
+    return 0;
+}
 
 
-  ////////////////////////////////////////
-  // Usuwam wtyczki
+
+int main()
+{
+
+  Configuration Config;
+
+  ///////////////////////////////////////
+  // Zaciagam wtyczki (pluginy)
   ///////////////////////////////////////
 
-  std::cout << "\nUsuwanie wtyczek...\n";
-  deletePlugins(LibInterfacesMap);
+  std::cout << "Ładowanie wtyczek...\n";
+  map<std::string, LibInterface* > LibInterfacesMap = loadPlugins(Config);
 
-  // testuje zaciaganie z xml
+  ///////////////////////////////////////
+  // Testuje czy wtyczki działają poprawnie
+  ///////////////////////////////////////
 
-  // if (!ReadFile("config/config.xml",Config)) return 1;
+  std::cout << "\nTestowanie wtyczek...\n";
+  testPlugins(LibInterfacesMap);
+
+////////////////////////////////////////
+// Uruchamiam preproces dla pliku z poleceniami
+////////////////////////////////////////
+
+  std::istringstream stream;
+  if (preProc("opis_dzialan.cmd", stream)) {
+      std::cout << "Preprocessing OK\n";
+      std::string line;
+      while (std::getline(stream, line)) {
+          std::cout << line << "\n";
+      }
+  } else {
+      std::cout << "Preprocessing failed\n";
+  }
+
+
+////////////////////////////////////////
+// Usuwam wtyczki
+///////////////////////////////////////
+
+std::cout << "\nUsuwanie wtyczek...\n";
+deletePlugins(LibInterfacesMap);
+
+// testuje zaciaganie z xml
+
+// if (!ReadFile("config/config.xml",Config)) return 1;
 
 
 }
