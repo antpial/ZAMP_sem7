@@ -13,6 +13,8 @@
 #include <map>
 #include "LibInterface.hh"
 
+#define COM_FILE_NAME "opis_dzialan.cmd"
+
 using namespace std;
 using namespace xercesc;
 
@@ -200,29 +202,22 @@ int main()
   // Uruchamiam preproces dla pliku z poleceniami
   ////////////////////////////////////////
 
-  // std::istringstream stream;
-  // if (preProc("opis_dzialan.cmd", stream)) {
-  //     std::cout << "Preprocessing OK\n";
-  //     std::string line;
-  //     while (std::getline(stream, line)) {
-  //         std::cout << line << "\n";
-  //     }
-  // } else {
-  //     std::cout << "Preprocessing failed\n";
-  // }
+  std::cout << "\nPreprocesuje plik " << COM_FILE_NAME << ":\n";
+
+  showPreProcesed(COM_FILE_NAME); // pokazuje przeprocesowany plik
 
   std::istringstream stream;
-  if (preProc("opis_dzialan.cmd", stream)) {
-      std::cout << "Preprocessing OK\n";
-      std::string order;
-      stream >> order;
-      AbstractInterp4Command * cmd = LibInterfacesMap[order]->_pCreateCmd();
-      cmd->ReadParams(stream);
-      cmd->PrintCmd();
-
-  } else {
-      std::cout << "Preprocessing failed\n";
+  if(not preProc(COM_FILE_NAME, stream)) {
+      std::cerr << "Preprocessing failed\n";
+      exit(0);
   }
+
+  std::string order;
+  stream >> order;
+  AbstractInterp4Command * cmd = LibInterfacesMap[order]->_pCreateCmd();
+  cmd->ReadParams(stream);
+  cmd->PrintCmd();
+
 
 
 ////////////////////////////////////////

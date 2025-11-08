@@ -8,4 +8,6 @@
 
 bool preProc(const char* fileName, std::istringstream &stream);
 
+int showPreProcesed(std::string com_file_name);
+
 #endif // PREPROC_HH
