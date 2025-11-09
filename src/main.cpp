@@ -155,7 +155,7 @@ std::cout << "\n\nUsuwanie wtyczek...\n";
 deletePlugins(LibInterfacesMap);
 
 // testuje zaciaganie z xml
-// if (!ReadFile("config/config.xml",Config)) return 1;
+if (!ReadFile("config/config.xml",Config)) return 1;
 
 
 }
