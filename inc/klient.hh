@@ -37,6 +37,9 @@ extern const char *Cmds4Obj3[];
 
 
 
+//////////////////////////////////////////
+// Klasa obiektu geometrycznego
+//////////////////////////////////////////
 
 /*!
  * \brief Ta klasa trochę udaję klasę MobileObj, która jest w zadaniu.
@@ -110,6 +113,11 @@ class Scene: public AccessControl {
    std::vector<GeomObject>   _Container4Objects;
 };
 
+
+
+////////////////////////////////////////////
+// Klasa sendera
+////////////////////////////////////////////
 
 
 /*!
