@@ -10,6 +10,10 @@
 #include <xercesc/sax2/Attributes.hpp>
 #include <xercesc/sax2/DefaultHandler.hpp>
 
+#include <xercesc/sax2/SAX2XMLReader.hpp>
+#include <xercesc/sax2/XMLReaderFactory.hpp>
+#include <xercesc/util/XMLString.hpp>
+
 //XERCES_CPP_NAMESPACE_USE
 
 #include "Configuration.hh"
@@ -83,6 +87,9 @@ class XMLInterp4Config : public xercesc::DefaultHandler {
      * \brief Analizuje atrybuty i odpwiednio je interpretuje
      */
     void ProcessCubeAttrs(const xercesc::Attributes&   rAttrs); 
+
+    bool ReadFile(const char* sFileName, Configuration &rConfig);
+
   private:
 };
 
