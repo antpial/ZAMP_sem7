@@ -13,6 +13,9 @@
 #include <map>
 #include "LibInterface.hh"
 #include "PluginLoader.hh"
+#include "AccessControl.hh"
+#include "Port.hh"
+#include "klient.hh"
 
 #define COM_FILE_NAME "opis_dzialan.cmd"
 
@@ -30,8 +33,18 @@ int main()
   // Wczytanie pliku konfiguracyjnego XML
   ///////////////////////////////////////
   XMLInterp4Config xmlInterp(Config);
-  if (!xmlInterp.ReadFile("config/config.xml", Config))
-     return 1;
+//   if (!xmlInterp.ReadFile("config/config.xml", Config))
+//      return 1;
+
+  ///////////////////////////////////////
+  // Laczenie sie z serwerem
+  ///////////////////////////////////////
+
+  cout << "Port: " << PORT << endl;
+  Scene               Scn;
+  int                 Socket4Sending; 
+
+  if (!OpenConnection(Socket4Sending)) return 1;
 
 
   ///////////////////////////////////////
@@ -48,7 +61,6 @@ int main()
   ////////////////////////////////////////
 
   std::cout << "\nPreprocesuje plik " << COM_FILE_NAME << "...\n";
-
   // DEBUG: Pokazuje przepreprocesowany plik
   // showPreProcesed(COM_FILE_NAME);
 
