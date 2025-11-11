@@ -190,7 +190,7 @@ bool OpenConnection(int &rSocket);
 
 bool ChangeState(Scene &Scn);
 
-
+int testFromEPortal();
 
 
 
