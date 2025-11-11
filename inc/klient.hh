@@ -6,6 +6,7 @@
 #include <mutex>
 #include "AccessControl.hh"
 #include "Port.hh"
+#include "Configuration.hh"
 
 /*!
  * \brief Ilość stanów każdego z obiektów.
@@ -191,6 +192,8 @@ bool OpenConnection(int &rSocket);
 bool ChangeState(Scene &Scn);
 
 int testFromEPortal();
+
+int drawScene(Configuration &Config);
 
 
 

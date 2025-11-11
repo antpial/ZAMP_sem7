@@ -38,12 +38,23 @@ int main()
   if (!xmlInterp.ReadFile("config/config.xml", Config))
      return 1;
 
+  // DEBUG: Pokazuje wczytane sześciany
+  std::cout << "\nWczytane sześciany z pliku konfiguracyjnego:\n";
+  for(const auto& cube : Config.cubesVec){
+      std::cout << "Main: Cube Name = " << cube->Name << "\n";
+      for (const auto& [key, value] : cube->ParamsMap){
+          std::cout << "      " << key << " => " << value << "\n";
+      }
+  }
+
   ///////////////////////////////////////
-  // Laczenie sie z serwerem
+  // Laczenie sie z serwerem i rysuje scene
   ///////////////////////////////////////
 
   // test ktory byl w klient.cpp::main na eportalu
-  testFromEPortal();
+  // testFromEPortal();
+
+  drawScene(Config);
 
   ///////////////////////////////////////
   // Zaciagam wtyczki (pluginy)

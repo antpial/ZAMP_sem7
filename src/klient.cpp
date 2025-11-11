@@ -303,14 +303,14 @@ int testFromEPortal(){
   cout << sConfigCmds << endl;
 
   Send(Socket4Sending,sConfigCmds);
-  cout << "Akcja:" << endl;    
-  for (GeomObject &rObj : Scn._Container4Objects) {
-    usleep(20000);
-    ChangeState(Scn);
-    Scn.MarkChange();
-    usleep(100000);
-  }
-  usleep(100000);
+  // cout << "Akcja:" << endl;    
+  // for (GeomObject &rObj : Scn._Container4Objects) {
+  //   usleep(20000);
+  //   ChangeState(Scn);
+  //   Scn.MarkChange();
+  //   usleep(100000);
+  // }
+  // usleep(100000);
 
     //-------------------------------------
   // Należy pamiętać o zamknięciu połączenia.
@@ -327,6 +327,70 @@ int testFromEPortal(){
 
 }
 
+
+int drawScene(Configuration &Config){
+
+  cout << "Port: " << PORT << endl;
+  Scene               Scn;
+  int                 Socket4Sending; 
+
+  if (!OpenConnection(Socket4Sending)) return 1;
+
+  Sender   ClientSender(Socket4Sending,&Scn);
+  thread   Thread4Sending(Fun_CommunicationThread,&ClientSender);
+
+  std::string str = "Clear";
+  for(auto cubePtr : Config.cubesVec){
+    str += "\nAddObj Name=" + cubePtr->Name + " ";
+    for(const auto& param : cubePtr->ParamsMap){
+      if(param.first == "RGB"){
+        str += param.first + "=(" + 
+               to_string(int(param.second[0])) + "," + 
+               to_string(int(param.second[1])) + "," + 
+               to_string(int(param.second[2])) + ") ";
+      }else{
+      str += param.first + "=(" + 
+             to_string(param.second[0]) + "," + 
+             to_string(param.second[1]) + "," + 
+             to_string(param.second[2]) + ") ";
+      }
+    }
+    
+  }
+  str += "\n";
+
+  const char *sConfigCmds = new char[str.size() + 1];
+  strcpy(const_cast<char*>(sConfigCmds), str.c_str());
+
+  // sConfigCmds =
+  //    "Clear\n"
+  //    "AddObj Name=Podstawa1 Scale=(4,2,1) RGB=(20,200,200) Shift=(0.5,0,0) RotXYZ_deg=(0,-45.0,20) Trans_m=(-1.0,3,0)\n"
+  //    "AddObj Name=Podstawa1.Ramie1 RGB=(200,0,0) Scale=(3,3,1) Shift=(0.5,0,0) RotXYZ_deg=(0,-45,0) Trans_m=(4,0,0)\n"
+  //    "AddObj Name=Podstawa1.Ramie1.Ramie2 RGB=(100,200,0) Scale=(2,2,1) Shift=(0.5,0,0) RotXYZ_deg=(0,-45,0) Trans_m=(3,0,0)\n"  ;     
+
+  cout << "Konfiguracja:" << endl;
+  cout << sConfigCmds << endl;
+
+  Send(Socket4Sending,sConfigCmds);
+  // cout << "Akcja:" << endl;    
+  // for (GeomObject &rObj : Scn._Container4Objects) {
+  //   usleep(20000);
+  //   ChangeState(Scn);
+  //   Scn.MarkChange();
+  //   usleep(100000);
+  // }
+  // usleep(100000);
+
+
+
+  cout << "Close\n" << endl; // To tylko, aby pokazac wysylana instrukcje
+  Send(Socket4Sending,"Close\n");
+  ClientSender.CancelCountinueLooping();
+  Thread4Sending.join();
+  close(Socket4Sending);
+
+  return 0;
+}
 
 
 
