@@ -138,33 +138,30 @@ void XMLInterp4Config::ProcessCubeAttrs(const xercesc::Attributes  &rAttrs)
 
  // Tu trzeba wstawić odpowiednio własny kod ...
 
-Cube cube;
-cube.Name = sValue_Name;
-for(int i = 0; i < rAttrs.getLength(); ++i){
+Cube* cube = new Cube();  // Musze utworzyc nowy bo cos jest nie tak z kopiowanie Vector3D
+cube->Name = sValue_Name;
+for(XMLSize_t i = 1; i < rAttrs.getLength(); i++){
     char* sAttrName = xercesc::XMLString::transcode(rAttrs.getQName(i));
     char* sAttrValue = xercesc::XMLString::transcode(rAttrs.getValue(i));
     istringstream IStrm;
     IStrm.str(sAttrValue);
     Vector3D vec;
     IStrm >> vec[0] >> vec[1] >> vec[2];
-    cube.ParamsMap[sAttrName] = vec;
-
+   cube->ParamsMap[std::string(sAttrName)] = vec;
+    xercesc::XMLString::release(&sAttrName);
+    xercesc::XMLString::release(&sAttrValue);
     }
 
 rConfig.cubesVec.push_back(cube);
 
-for (const auto& [key, value] : cube.ParamsMap) {
-  if (key == "Name"){
-    cout << "name => " << cube.Name << "\n";
-  }else{
+// DEBUG:
+std::cout << "Ja:   Cube parameters:\n";
+std::cout << "Name => " << cube->Name << "\n";
+for (const auto& [key, value] : cube->ParamsMap){
     std::cout << key << " => " << value << "\n";
-  }
-
-}   
+}
 
 
-
- 
  xercesc::XMLString::release(&sName_Name);
  xercesc::XMLString::release(&sName_Scale);
  xercesc::XMLString::release(&sName_RGB);

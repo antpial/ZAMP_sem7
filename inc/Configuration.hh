@@ -36,7 +36,7 @@ class Configuration {
   /*!
     * \brief Kolekcja opisów sześcianów do umieszczenia w scenie
   */
-  std::vector <Cube>  cubesVec;
+  std::vector <Cube*>  cubesVec;
 
 };
 
