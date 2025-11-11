@@ -9,6 +9,7 @@
 
 using namespace std;
 using namespace xercesc;
+using namespace geom;
 
 
 
@@ -16,7 +17,7 @@ using namespace xercesc;
  * Konstruktor klasy. Tutaj należy zainicjalizować wszystkie
  * dodatkowe pola.
  */
-XMLInterp4Config::XMLInterp4Config(Configuration &rConfig)
+XMLInterp4Config::XMLInterp4Config(Configuration &rConfig) : rConfig(rConfig)
 {
 }
 
@@ -122,21 +123,48 @@ void XMLInterp4Config::ProcessCubeAttrs(const xercesc::Attributes  &rAttrs)
  //
  // IStrm >> Scale;
  //
- istringstream   IStrm;
+//  istringstream   IStrm;
  
- IStrm.str(sValue_Scale);
- double  Sx,Sy,Sz;
+//  IStrm.str(sValue_Scale);
+//  double  Sx,Sy,Sz;
 
- IStrm >> Sx >> Sy >> Sz;
- if (IStrm.fail()) {
-     cerr << " Blad!!!" << endl;
- } else {
-     cout << " Czytanie wartosci OK!!!" << endl;
-     cout << "     " << Sx << "  " << Sy << "  " << Sz << endl;
- }
+//  IStrm >> Sx >> Sy >> Sz;
+//  if (IStrm.fail()) {
+//      cerr << " Blad!!!" << endl;
+//  } else {
+//      cout << " Czytanie wartosci OK!!!" << endl;
+//      cout << "     " << Sx << "  " << Sy << "  " << Sz << endl;
+//  }
 
  // Tu trzeba wstawić odpowiednio własny kod ...
 
+Cube cube;
+cube.Name = sValue_Name;
+for(int i = 0; i < rAttrs.getLength(); ++i){
+    char* sAttrName = xercesc::XMLString::transcode(rAttrs.getQName(i));
+    char* sAttrValue = xercesc::XMLString::transcode(rAttrs.getValue(i));
+    istringstream IStrm;
+    IStrm.str(sAttrValue);
+    Vector3D vec;
+    IStrm >> vec[0] >> vec[1] >> vec[2];
+    cube.ParamsMap[sAttrName] = vec;
+
+    }
+
+rConfig.cubesVec.push_back(cube);
+
+for (const auto& [key, value] : cube.ParamsMap) {
+  if (key == "Name"){
+    cout << "name => " << cube.Name << "\n";
+  }else{
+    std::cout << key << " => " << value << "\n";
+  }
+
+}   
+
+
+
+ 
  xercesc::XMLString::release(&sName_Name);
  xercesc::XMLString::release(&sName_Scale);
  xercesc::XMLString::release(&sName_RGB);

@@ -434,4 +434,7 @@ std::ostream & operator << ( std::ostream &OStrm, const geom::Vector<Type,Size> 
 
 
 
+
+
+
 #endif

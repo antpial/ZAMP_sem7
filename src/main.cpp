@@ -35,8 +35,8 @@ int main()
   // Wczytanie pliku konfiguracyjnego XML
   ///////////////////////////////////////
   XMLInterp4Config xmlInterp(Config);
-//   if (!xmlInterp.ReadFile("config/config.xml", Config))
-//      return 1;
+  if (!xmlInterp.ReadFile("config/config.xml", Config))
+     return 1;
 
   ///////////////////////////////////////
   // Laczenie sie z serwerem
