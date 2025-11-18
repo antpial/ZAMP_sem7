@@ -89,9 +89,13 @@ int main()
   std:: cout << "\nRealizuje kolejne komendy: \n";
 
   while(stream >> order){
-  cmd = LibInterfacesMap[order]->_pCreateCmd();
-  cmd->ReadParams(stream);
-  cmd->PrintCmd();
+    if (order == "Begin_Parallel_Actions" || order == "End_Parallel_Actions") {
+        std::cout << "\nPolecenie " << order << " pomijane w tej wersji programu.\n";
+    }else{
+    cmd = LibInterfacesMap[order]->_pCreateCmd();
+    cmd->ReadParams(stream);
+    cmd->PrintCmd();
+    }
   }
 
 
