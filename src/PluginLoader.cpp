@@ -10,7 +10,7 @@ std::map<std::string, LibInterface*> loadPlugins(Configuration Config){
     AbstractInterp4Command *(*pCreateCmd)(void); // wskaźnik do funkcji tworzącej obiekt polecenia
     AbstractInterp4Command *pCmd;
     std::map<std::string, LibInterface* > LibInterfacesMap;
-    for(std::string plugin : Config.pluginsVec) {
+    for(std::string plugin : Config.plugins) {
 
       // DEBUG: sprawdzam czy wtyczki wczytane z konfiguracji sa poprawne
       // std::cout << "Plugin: " << plugin << "\n";

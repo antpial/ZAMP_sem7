@@ -70,6 +70,9 @@ void XMLInterp4Config::ProcessLibAttrs(const xercesc::Attributes  &rAttrs)
 
  // Tu trzeba wpisać własny kod ...
 
+ rConfig.plugins.push_back(std::string(sLibName));
+ std::cout << "Ja:   Dodano bibliotekę: " << sLibName << "\n";
+
  xercesc::XMLString::release(&sParamName);
  xercesc::XMLString::release(&sLibName);
 }

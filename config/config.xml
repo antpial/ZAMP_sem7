@@ -1,8 +1,8 @@
   <Config>
-   <Plugins>
-      <Lib Name="libInter4Move.so"/>
-      <Lib Name="libInter4Rotate.so"/>
-      <Lib Name="libInter4Pause.so"/>
+   <Plugins> <!-- Wczytywaja zamiast tych w pliku config -->
+      <Lib Name="libInterp4Move.so"/>
+      <Lib Name="libInterp4Rotate.so"/>
+      <Lib Name="libInterp4Pause.so"/>
    </Plugins>
    <Objects>
      <Cube Name="Podstawa" Shift="0 -0.5 0" Scale="0.7 0.7 0.2"
