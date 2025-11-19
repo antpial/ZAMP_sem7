@@ -5,12 +5,12 @@
       <Lib Name="libInterp4Pause.so"/>
    </Plugins>
    <Objects>
-     <Cube Name="Podstawa" Shift="0 -0.5 0" Scale="0.7 0.7 0.2"
-                 RotXYZ_deg="10 0 0" Trans_m="0.1 0 0" RGB="0 0 255"/>
-     <Cube Name="Podstawa.Ramie1" Shift="0 -0.5 0" Scale="0.1 0.1 0.6"
-	                                                 Trans_m="0 0.7 0"/>
-     <Cube Name="Podstawa.Ramie1.Ramie2" Shift="0 -0.5 0"
-	         Scale="0.1 0.1 0.6" Trans_m="0 0.7 0"/>
+     <Cube Name="Kadlub" Shift="0 0.0 0" Scale="1.0 1.0 1.0"
+                 RotXYZ_deg="0 0 0" Trans_m="0 0 0" RGB="255 0 0"/>
+     <Cube Name="Kadlub.Kolumna" Shift="0 0 0.0" Scale="0.1 0.1 0.2"
+                                RotXYZ_deg="0 0 0" Trans_m="0 0.0 0.6"/>
+     <Cube Name="Kadlub.Kolumna.Smiglo" Shift="0 0 0.0"
+	         Scale="0.1 1.5 0.05" Trans_m="0 0.0 0.125"/>
    </Objects>
   </Config>
   
