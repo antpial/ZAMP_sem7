@@ -12,6 +12,8 @@
 #include "AccessControl.hh"
 #include "Port.hh"
 #include "klient.hh"
+// #include "GeomObject.hh"
+#include "Scene.hh"
 
 
 using namespace std;
@@ -97,52 +99,52 @@ const char* Cmds4Obj3[] = {
 ///////////////////////////////////////////
 
 
-Scene::Scene(): _Container4Objects(3)
-{
-    _Container4Objects[0].SetCmds(Cmds4Obj1);
-    _Container4Objects[1].SetCmds(Cmds4Obj2);
-    _Container4Objects[2].SetCmds(Cmds4Obj3);
-}
+// Scene::Scene(): _Container4Objects(3)
+// {
+//     _Container4Objects[0].SetCmds(Cmds4Obj1);
+//     _Container4Objects[1].SetCmds(Cmds4Obj2);
+//     _Container4Objects[2].SetCmds(Cmds4Obj3);
+// }
 
 
-///////////////////////////////////////////
-// Klasa obiektu geometrycznego
-///////////////////////////////////////////
+// ///////////////////////////////////////////
+// // Klasa obiektu geometrycznego
+// ///////////////////////////////////////////
 
-  /*!
-   * \brief Ustawia zestaw poleceń odpowiadających kolejnym stanom
-   *        obiektu.
-   */
-  void GeomObject::SetCmds(const char *CmdsTab[STATES_NUMBER]) { _Cmd4StatDesc = CmdsTab; }
+//   /*!
+//    * \brief Ustawia zestaw poleceń odpowiadających kolejnym stanom
+//    *        obiektu.
+//    */
+//   void GeomObject::SetCmds(const char *CmdsTab[STATES_NUMBER]) { _Cmd4StatDesc = CmdsTab; }
 
 
-  /*!
-   * \brief Udostępnia kolejny zestaw poleceń umożliwiających
-   *        zespołu obiektu.
-   *
-   * Udostępnia kolejny zestaw poleceń umożliwiających
-   * zespołu obiektu. Ta metoda "udaje" metodę, która w oryginalnym
-   * rozwiązaniu powinna wygenerować odpowiednie polecenie na podstawie
-   * przechowywanej informacji o położeniu i orientacji obiektu.
-   */
-  const char* GeomObject::GetStateDesc() const
-  {
-    return _Cmd4StatDesc[_StateIdx];
-  }
-    /*!
-     * \brief Zwiększa indeks stanu obiektu.
-     *
-     * Zwiększa indeks stanu obiektu.
-     * \retval true - jeśli indeks został zwiększony,
-     * \retval false - jeśli indeks nie może zostać zwiększony
-     *                 (osiągnięto maksymalny stan obiektu).
-     */
+//   /*!
+//    * \brief Udostępnia kolejny zestaw poleceń umożliwiających
+//    *        zespołu obiektu.
+//    *
+//    * Udostępnia kolejny zestaw poleceń umożliwiających
+//    * zespołu obiektu. Ta metoda "udaje" metodę, która w oryginalnym
+//    * rozwiązaniu powinna wygenerować odpowiednie polecenie na podstawie
+//    * przechowywanej informacji o położeniu i orientacji obiektu.
+//    */
+//   const char* GeomObject::GetStateDesc() const
+//   {
+//     return _Cmd4StatDesc[_StateIdx];
+//   }
+//     /*!
+//      * \brief Zwiększa indeks stanu obiektu.
+//      *
+//      * Zwiększa indeks stanu obiektu.
+//      * \retval true - jeśli indeks został zwiększony,
+//      * \retval false - jeśli indeks nie może zostać zwiększony
+//      *                 (osiągnięto maksymalny stan obiektu).
+//      */
 
-bool GeomObject::IncStateIndex() {
-    if (_StateIdx >= STATES_NUMBER-1) return false;
-    ++_StateIdx;
-    return true;
-  }
+// bool GeomObject::IncStateIndex() {
+//     if (_StateIdx >= STATES_NUMBER-1) return false;
+//     ++_StateIdx;
+//     return true;
+//   }
 
 
 ///////////////////////////////////////////

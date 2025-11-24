@@ -2,12 +2,17 @@
 #define SCENE_HH
 
 #include "AbstractScene.hh"
+#include "AbstractMobileObj.hh"
+#include <vector>
+// #include "klient.hh"
+#include "AccessControl.hh"
+#include "GeomObject.hh"
 
 
-class Scene : public AbstractScene
+class Scene : public AbstractScene, public AccessControl
 {
 private:
-    /* data */
+    std::vector<AbstractMobileObj*> MobileObjects_;
 public:
     Scene(/* args */);
     ~Scene();
@@ -15,6 +20,7 @@ public:
     AbstractMobileObj*  FindMobileObj(const char *sName) override;
 
     void AddMobileObj(AbstractMobileObj *pMobObj) override;
+    std::vector<GeomObject>   _Container4Objects;
 
 };
 

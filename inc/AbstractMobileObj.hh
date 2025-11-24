@@ -20,6 +20,7 @@
     * Nazwy metod są obowiązujące.
     */
     class AbstractMobileObj {
+
      public:
 
        virtual ~AbstractMobileObj() {}
