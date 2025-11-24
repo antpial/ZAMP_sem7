@@ -22,8 +22,8 @@ LDFLAGS=-Wall
 
 
 
-interp: obj/main.o obj/PreProc.o obj/xmlinterp.o obj/PluginLoader.o obj/klient.o
-	g++ ${LDFLAGS} -o interp  obj/main.o obj/PreProc.o obj/xmlinterp.o obj/PluginLoader.o obj/klient.o -Llibs -ldl -lxerces-c -Wl,-rpath=libs
+interp: obj/main.o obj/PreProc.o obj/xmlinterp.o obj/PluginLoader.o obj/klient.o obj/ComChannel.o
+	g++ ${LDFLAGS} -o interp  obj/main.o obj/PreProc.o obj/xmlinterp.o obj/PluginLoader.o obj/klient.o obj/ComChannel.o -Llibs -ldl -lxerces-c -Wl,-rpath=libs
 
 obj/main.o: src/main.cpp inc/AbstractInterp4Command.hh inc/AbstractScene.hh\
             inc/AbstractComChannel.hh
@@ -40,6 +40,10 @@ obj/xmlinterp.o: src/xmlinterp.cpp inc/xmlinterp.hh
 
 obj/klient.o: src/klient.cpp inc/klient.hh
 	g++ -c ${CPPFLAGS} -o obj/klient.o src/klient.cpp
+
+obj/ComChannel.o: src/ComChannel.cpp inc/ComChannel.hh
+	g++ -c ${CPPFLAGS} -o obj/ComChannel.o src/ComChannel.cpp
+
 
 
 doc:

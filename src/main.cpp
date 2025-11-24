@@ -89,7 +89,7 @@ int main()
   std::string order;
   bool inParallel = false;
   // Scene scene;
-  // ComChannel comChannel;
+  ComChannel comChannel;
 
   std:: cout << "\nRealizuje kolejne komendy: \n";
 
