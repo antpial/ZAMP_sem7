@@ -22,8 +22,8 @@ LDFLAGS=-Wall
 
 
 
-interp: obj/main.o obj/PreProc.o obj/xmlinterp.o obj/PluginLoader.o obj/klient.o obj/ComChannel.o obj/MobileObj.o obj/Scene.o obj/GeomObject.o
-	g++ ${LDFLAGS} -o interp  obj/main.o obj/PreProc.o obj/xmlinterp.o obj/PluginLoader.o obj/klient.o obj/ComChannel.o obj/MobileObj.o obj/Scene.o obj/GeomObject.o -Llibs -ldl -lxerces-c -Wl,-rpath=libs
+interp: obj/main.o obj/PreProc.o obj/xmlinterp.o obj/PluginLoader.o obj/klient.o obj/ComChannel.o obj/MobileObj.o obj/Scene.o obj/GeomObject.o obj/Sender.o
+	g++ ${LDFLAGS} -o interp  obj/main.o obj/PreProc.o obj/xmlinterp.o obj/PluginLoader.o obj/klient.o obj/ComChannel.o obj/MobileObj.o obj/Scene.o obj/GeomObject.o obj/Sender.o -Llibs -ldl -lxerces-c -Wl,-rpath=libs
 
 obj/main.o: src/main.cpp inc/AbstractInterp4Command.hh inc/AbstractScene.hh\
             inc/AbstractComChannel.hh
@@ -52,6 +52,9 @@ obj/Scene.o: src/Scene.cpp inc/Scene.hh
 
 obj/GeomObject.o: src/GeomObject.cpp inc/GeomObject.hh
 	g++ -c ${CPPFLAGS} -o obj/GeomObject.o src/GeomObject.cpp
+
+obj/Sender.o: src/Sender.cpp inc/Sender.hh
+	g++ -c ${CPPFLAGS} -o obj/Sender.o src/Sender.cpp
 
 
 doc:
