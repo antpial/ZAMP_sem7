@@ -18,7 +18,7 @@
 #include "klient.hh"
 #include <thread>
 #include <unistd.h>
-// #include "Scene.hh"
+#include "Scene.hh"
 #include "ComChannel.hh"
 
 #define COM_FILE_NAME "opis_dzialan.cmd"
@@ -32,7 +32,7 @@ int main()
 {
 
   Configuration Config;
-
+  Scene scene(Config);
   ///////////////////////////////////////
   // Wczytanie pliku konfiguracyjnego XML
   ///////////////////////////////////////
@@ -49,14 +49,16 @@ int main()
       }
   }
 
+  scene.loadObjectsFromConfig();
+
   ///////////////////////////////////////
   // Laczenie sie z serwerem i rysuje scene
   ///////////////////////////////////////
 
   // test ktory byl w klient.cpp::main na eportalu
   // testFromEPortal();
-
-  drawScene(Config);
+  ComChannel comChannel;
+  comChannel.Send(scene.configCmds2Str().c_str());
 
   ///////////////////////////////////////
   // Zaciagam wtyczki (pluginy)
@@ -88,36 +90,34 @@ int main()
   AbstractInterp4Command * cmd;
   std::string order;
   bool inParallel = false;
-  // Scene scene;
-  ComChannel comChannel;
 
   std:: cout << "\nRealizuje kolejne komendy: \n";
 
-  // while(stream >> order){
-  //   if (order == "Begin_Parallel_Actions") {
-  //       inParallel = true;
-  //   } else if (order == "End_Parallel_Actions") {
-  //       inParallel = false;
-  //   } else if (inParallel) {
-  //       // W tej wersji programu pomijam realizację poleceń równoległych
-  //       std::cout << "\nPolecenie " << order << " pomijane w tej wersji programu.\n";
-  //   } else {
-  //       cmd = LibInterfacesMap[order]->_pCreateCmd();
-  //       cmd->ReadParams(stream);
-  //       cmd->PrintCmd();
-  //       cmd->ExecCmd(scene,"MobileObject1",comChannel);
-  //   }
-  // }
-
   while(stream >> order){
-    if (order == "Begin_Parallel_Actions" || order == "End_Parallel_Actions") {
+    if (order == "Begin_Parallel_Actions") {
+        inParallel = true;
+    } else if (order == "End_Parallel_Actions") {
+        inParallel = false;
+    } else if (inParallel) {
+        // W tej wersji programu pomijam realizację poleceń równoległych
         std::cout << "\nPolecenie " << order << " pomijane w tej wersji programu.\n";
-    }else{
-    cmd = LibInterfacesMap[order]->_pCreateCmd();
-    cmd->ReadParams(stream);
-    cmd->PrintCmd();
+    } else {
+        cmd = LibInterfacesMap[order]->_pCreateCmd();
+        cmd->ReadParams(stream);
+        cmd->PrintCmd();
+        cmd->ExecCmd(scene,"Kadlub",comChannel);
     }
   }
+
+  // while(stream >> order){
+  //   if (order == "Begin_Parallel_Actions" || order == "End_Parallel_Actions") {
+  //       std::cout << "\nPolecenie " << order << " pomijane w tej wersji programu.\n";
+  //   }else{
+  //   cmd = LibInterfacesMap[order]->_pCreateCmd();
+  //   cmd->ReadParams(stream);
+  //   cmd->PrintCmd();
+  //   }
+  // }
 
 
 ////////////////////////////////////////

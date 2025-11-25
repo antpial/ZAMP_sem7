@@ -8,6 +8,8 @@
 
 #include "AbstractInterp4Command.hh"
 
+#define N 100
+
 /*!
  * \file
  * \brief Definicja klasy Interp4Move

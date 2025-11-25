@@ -2,12 +2,14 @@
 #define COMCHANNEL_HH
 
 #include "AbstractComChannel.hh"
+#include "Configuration.hh"
 
 
 class ComChannel : public AbstractComChannel {
  private:
   int Socket_;
   std::mutex Mutex_;
+  bool OpenConnection(int &rSocket);
 
  public:
   ComChannel();
@@ -18,6 +20,8 @@ class ComChannel : public AbstractComChannel {
   void LockAccess() override;
   void UnlockAccess() override;
   std::mutex &UseGuard() override;
+  int Send(const char *sMesg) override;
+
 };
 
 

@@ -12,7 +12,6 @@
 #include "AccessControl.hh"
 #include "Port.hh"
 #include "klient.hh"
-// #include "GeomObject.hh"
 #include "Scene.hh"
 #include "Sender.hh"
 
@@ -94,112 +93,6 @@ const char* Cmds4Obj3[] = {
 
 
 
-
-///////////////////////////////////////////
-// Klasa sceny
-///////////////////////////////////////////
-
-
-// Scene::Scene(): _Container4Objects(3)
-// {
-//     _Container4Objects[0].SetCmds(Cmds4Obj1);
-//     _Container4Objects[1].SetCmds(Cmds4Obj2);
-//     _Container4Objects[2].SetCmds(Cmds4Obj3);
-// }
-
-
-// ///////////////////////////////////////////
-// // Klasa obiektu geometrycznego
-// ///////////////////////////////////////////
-
-//   /*!
-//    * \brief Ustawia zestaw poleceń odpowiadających kolejnym stanom
-//    *        obiektu.
-//    */
-//   void GeomObject::SetCmds(const char *CmdsTab[STATES_NUMBER]) { _Cmd4StatDesc = CmdsTab; }
-
-
-//   /*!
-//    * \brief Udostępnia kolejny zestaw poleceń umożliwiających
-//    *        zespołu obiektu.
-//    *
-//    * Udostępnia kolejny zestaw poleceń umożliwiających
-//    * zespołu obiektu. Ta metoda "udaje" metodę, która w oryginalnym
-//    * rozwiązaniu powinna wygenerować odpowiednie polecenie na podstawie
-//    * przechowywanej informacji o położeniu i orientacji obiektu.
-//    */
-//   const char* GeomObject::GetStateDesc() const
-//   {
-//     return _Cmd4StatDesc[_StateIdx];
-//   }
-//     /*!
-//      * \brief Zwiększa indeks stanu obiektu.
-//      *
-//      * Zwiększa indeks stanu obiektu.
-//      * \retval true - jeśli indeks został zwiększony,
-//      * \retval false - jeśli indeks nie może zostać zwiększony
-//      *                 (osiągnięto maksymalny stan obiektu).
-//      */
-
-// bool GeomObject::IncStateIndex() {
-//     if (_StateIdx >= STATES_NUMBER-1) return false;
-//     ++_StateIdx;
-//     return true;
-//   }
-
-
-// ///////////////////////////////////////////
-// // Klasa sendera
-// ///////////////////////////////////////////
-
-
-//   /*!
-//    * \brief Sprawdza, czy pętla wątku może być wykonywana.
-//    * 
-//    * Sprawdza, czy pętla wątku może być wykonywana.
-//    * \retval true - pętla wątku może być nadal wykonywana.
-//    * \retval false - w przypadku przeciwnym.
-//    */
-//    bool Sender::ShouldCountinueLooping() const { return _ContinueLooping; }
-//   /*!
-//    * \brief Powoduje przerwanie działania pętli wątku.
-//    *
-//    * Powoduje przerwanie działania pętli wątku.
-//    * \warning Reakcja na tę operację nie będize natychmiastowa.
-//    */  
-//    void Sender::CancelCountinueLooping() { _ContinueLooping = false; }
-
-//   /*!
-//    * \brief Ta metoda jest de facto treścią wątku komunikacyjnego
-//    *
-//    * Przegląda scenę i tworzy odpowiednie polecenia, a następnie
-//    * wysyła je do serwera.
-//    * \param[in] Socket - deskryptor gniazda sieciowego, poprzez które
-//    *                     wysyłane są polecenia.
-//    */
-//    void Sender::Watching_and_Sending() {
-//      while (ShouldCountinueLooping()) {
-//        if (!_pScn->IsChanged())  { usleep(10000); continue; }
-//        _pScn->LockAccess();
-       
-//        //------- Przeglądanie tej kolekcji to uproszczony przykład
-       
-//        for (const GeomObject &rObj : _pScn->_Container4Objects) {
-//                                      // Ta instrukcja to tylko uproszczony przykład
-// 	 cout << rObj.GetStateDesc();
-//          Send(_Socket,rObj.GetStateDesc()); // Tu musi zostać wywołanie odpowiedniej
-//                                            // metody/funkcji gerującej polecenia dla serwera.
-//        }
-       
-//        _pScn->CancelChange();
-//        _pScn->UnlockAccess();
-//      }
-//    }
-  
-
-
-
-
 /*!
  * \brief Funkcja jest treścią wątku komunikacyjnego
  * 
@@ -277,64 +170,11 @@ bool ChangeState(Scene &Scn) //GeomObject *pObj, AccessControl  *pAccCtrl)
   return true;
 }
 
-/*!
- * \brief Test funkcji klienta z eportalu
- *
- * Test funkcji klienta z eportalu
- */
 
-int testFromEPortal(){
 
+int drawScene(Configuration &Config, Scene &Scn){
 
   cout << "Port: " << PORT << endl;
-  Scene               Scn;
-  int                 Socket4Sending; 
-
-  if (!OpenConnection(Socket4Sending)) return 1;
-
-  Sender   ClientSender(Socket4Sending,&Scn);
-  thread   Thread4Sending(Fun_CommunicationThread,&ClientSender);
-  const char *sConfigCmds =
-     "Clear\n"
-     "AddObj Name=Podstawa1 RGB=(20,200,200) Scale=(4,2,1) Shift=(0.5,0,0) RotXYZ_deg=(0,-45,20) Trans_m=(-1,3,0)\n"
-     "AddObj Name=Podstawa1.Ramie1 RGB=(200,0,0) Scale=(3,3,1) Shift=(0.5,0,0) RotXYZ_deg=(0,-45,0) Trans_m=(4,0,0)\n"
-     "AddObj Name=Podstawa1.Ramie1.Ramie2 RGB=(100,200,0) Scale=(2,2,1) Shift=(0.5,0,0) RotXYZ_deg=(0,-45,0) Trans_m=(3,0,0)\n"       
-     "AddObj Name=Podstawa2 RGB=(20,200,200) Scale=(4,2,1) Shift=(0.5,0,0) RotXYZ_deg=(0,-45,0) Trans_m=(-1,-3,0)\n"
-     "AddObj Name=Podstawa2.Ramie1 RGB=(200,0,0) Scale=(3,3,1) Shift=(0.5,0,0) RotXYZ_deg=(0,-45,0) Trans_m=(4,0,0)\n"
-     "AddObj Name=Podstawa2.Ramie1.Ramie2 RGB=(100,200,0) Scale=(2,2,1) Shift=(0.5,0,0) RotXYZ_deg=(0,-45,0) Trans_m=(3,0,0)\n";
-  cout << "Konfiguracja:" << endl;
-  cout << sConfigCmds << endl;
-
-  Send(Socket4Sending,sConfigCmds);
-  // cout << "Akcja:" << endl;    
-  // for (GeomObject &rObj : Scn._Container4Objects) {
-  //   usleep(20000);
-  //   ChangeState(Scn);
-  //   Scn.MarkChange();
-  //   usleep(100000);
-  // }
-  // usleep(100000);
-
-    //-------------------------------------
-  // Należy pamiętać o zamknięciu połączenia.
-  // Bez tego serwer nie będzie reagował na
-  // nowe połączenia.
-  //
-  cout << "Close\n" << endl; // To tylko, aby pokazac wysylana instrukcje
-  Send(Socket4Sending,"Close\n");
-  ClientSender.CancelCountinueLooping();
-  Thread4Sending.join();
-  close(Socket4Sending);
-
-  return 0;
-
-}
-
-
-int drawScene(Configuration &Config){
-
-  cout << "Port: " << PORT << endl;
-  Scene               Scn;
   int                 Socket4Sending; 
 
   if (!OpenConnection(Socket4Sending)) return 1;

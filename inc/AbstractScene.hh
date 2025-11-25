@@ -4,6 +4,8 @@
 
 #include "AbstractMobileObj.hh"
 
+class MobileObj;
+
 /*!
  * \file 
  * \brief Zawiera definicję klasy abstrakcyjnej AbstractScene
@@ -40,6 +42,7 @@
 	*  \param[in] pMobObj - wskaźnik na istniejący obiekt.
         */
         virtual void AddMobileObj(AbstractMobileObj *pMobObj) = 0;
+        virtual std::string UpdateObj(const AbstractMobileObj* Obj) = 0;
   };
 
 #endif
