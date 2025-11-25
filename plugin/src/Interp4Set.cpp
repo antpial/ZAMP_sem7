@@ -74,6 +74,34 @@ bool Interp4Set::ExecCmd( AbstractScene      &rScn,
   /*
    *  Tu trzeba napisać odpowiedni kod.
    */
+
+
+    AbstractMobileObj* wObMob = rScn.FindMobileObj(this->_nazwa_obiektu.c_str());
+
+    if( wObMob == nullptr )
+    {
+        std::cerr<<"Nie mogę znaleźć obiektu: "<<this->_nazwa_obiektu.c_str()<<std::endl;
+        return false;
+    }
+
+    Vector3D tmpVec;
+    tmpVec[0] = _wsp_x;
+    tmpVec[1] = _wsp_y;
+    tmpVec[2] = _wsp_z;
+
+    rComChann.LockAccess();
+
+    wObMob->SetPosition_m(tmpVec);
+    wObMob->SetAng_Yaw_deg(_kat_OZ);
+    wObMob->SetAng_Roll_deg(_kat_OX);
+    wObMob->SetAng_Pitch_deg(_kat_OY);
+
+    rComChann.Send(rScn.UpdateObj(wObMob).c_str());
+
+    rComChann.UnlockAccess();
+
+
+
   return true;
 }
 

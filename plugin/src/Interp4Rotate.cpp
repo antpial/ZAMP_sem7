@@ -1,5 +1,8 @@
 #include <iostream>
 #include "Interp4Rotate.hh"
+#include "Vector3D.hh"
+#include <unistd.h>
+#include "MobileObj.hh"
 
 
 using std::cout;
@@ -71,6 +74,88 @@ bool Interp4Rotate::ExecCmd( AbstractScene      &rScn,
   /*
    *  Tu trzeba napisać odpowiedni kod.
    */
+
+    AbstractMobileObj* wObMob = rScn.FindMobileObj(sMobObjName);
+
+    if( wObMob == nullptr )
+    {
+        std::cerr<<"Nie mogę znaleźć obiektu: "<< sMobObjName <<std::endl;
+        return false;
+    }
+
+    if( this->_nazwa_osi == "OX" )
+    {
+
+        rComChann.LockAccess();
+        double start = wObMob->GetAng_Pitch_deg();
+        double delta_deg = 0;
+        double dist_step_deg = (double)_kat_obrotu/N;
+        double time_step_us = (abs(((double)this->_kat_obrotu/this->_szybkosc_katowa))*1000000)/N;
+        rComChann.UnlockAccess();
+
+        for(int i = 0; i<N; ++i)
+        {
+            rComChann.LockAccess();
+            delta_deg += dist_step_deg;
+            wObMob->SetAng_Pitch_deg(delta_deg + start);
+
+            rComChann.Send(rScn.UpdateObj(wObMob).c_str());
+
+            rComChann.UnlockAccess();
+
+            usleep(time_step_us);
+        }
+
+    }
+    else if( this->_nazwa_osi == "OY" )
+    {
+        rComChann.LockAccess();
+        double start = wObMob->GetAng_Roll_deg();
+        double delta_deg = 0;
+        double dist_step_deg = (double)_kat_obrotu/N;
+        double time_step_us = ((abs((double)this->_kat_obrotu/this->_szybkosc_katowa))*1000000)/N;
+        rComChann.UnlockAccess();
+
+        for(int i = 0; i<N; ++i)
+        {
+            rComChann.LockAccess();
+            delta_deg += dist_step_deg;
+            wObMob->SetAng_Roll_deg(delta_deg + start);
+
+            rComChann.Send(rScn.UpdateObj(wObMob).c_str());
+
+
+            rComChann.UnlockAccess();
+
+            usleep(time_step_us);
+        }
+
+    }
+    else if( this->_nazwa_osi == "OZ" )
+    {
+        rComChann.LockAccess();
+        double start = wObMob->GetAng_Yaw_deg();
+        double delta_deg = 0;
+        double dist_step_deg = (double)_kat_obrotu/N;
+        double time_step_us = ((abs((double)this->_kat_obrotu/this->_szybkosc_katowa)*1000000))/N;
+        rComChann.UnlockAccess();
+
+        for(int i = 0; i<N; ++i)
+        {
+            rComChann.LockAccess();
+            delta_deg += dist_step_deg;
+            wObMob->SetAng_Yaw_deg(delta_deg + start);
+
+            rComChann.Send(rScn.UpdateObj(wObMob).c_str());
+
+
+            rComChann.UnlockAccess();
+
+            usleep(time_step_us);
+        }
+
+    }
+
   return true;
 }
 

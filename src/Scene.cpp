@@ -113,25 +113,6 @@ std::string Scene::UpdateObj(const AbstractMobileObj* Obje) {
     return oss.str();
 }
 
-void Scene::UpdateGlobalTransforms(const std::string& root)
-{
-    MobileObj* obj = Find(root);
-    if (!obj) return;
-
-    // 1. policz global transform tego obiektu
-    if (obj->HasParent())
-        obj->global = obj->parent->global * obj->local;  // macierze transformacji
-    else
-        obj->global = obj->local;
-
-    // 2. wyślij UpdateObj
-    rCom.Send( MakeUpdateString(obj) );
-
-    // 3. przejdź po dzieciach
-    for (auto* child : children[obj])
-        UpdateGlobalTransforms(child->Name());
-}
-
 
 
 

@@ -81,8 +81,8 @@ bool Interp4Move::ExecCmd( AbstractScene      &rScn,
         return false;
     }
 
-
-  Vector3D startPos = wObMob->GetPositoin_m();
+    rComChann.LockAccess();
+    Vector3D startPos = wObMob->GetPositoin_m();
     double startRoll = wObMob->GetAng_Roll_deg();
     double startPitch = wObMob->GetAng_Pitch_deg();
     double startYaw = wObMob->GetAng_Yaw_deg();
@@ -90,10 +90,11 @@ bool Interp4Move::ExecCmd( AbstractScene      &rScn,
     delta_x_m = delta_y_m = delta_z_m = 0;
     double dist_step_m = (double)_dlugosc_drogi/N;
     double time_step_us = (((double)_dlugosc_drogi/this->_szybkosc)*1000000)/N;
+    rComChann.UnlockAccess();
 
     for(int i = 0; i<N; ++i)
     {
-        // wObMob->LockAccess();
+        rComChann.LockAccess();
   
         delta_x_m += dist_step_m*cos(startPitch*M_PI/180)*cos(startYaw*M_PI/180);
         delta_y_m += dist_step_m*(cos(startRoll*M_PI/180)*sin(startYaw*M_PI/180) + cos(startYaw*M_PI/180)*sin(startPitch*M_PI/180)*sin(startRoll*M_PI/180));
@@ -105,19 +106,11 @@ bool Interp4Move::ExecCmd( AbstractScene      &rScn,
         wObMob->SetPosition_m(vecTmp);
 
         rComChann.Send(rScn.UpdateObj(wObMob).c_str());
+
+        rComChann.UnlockAccess();
         usleep(time_step_us);
-    }
-
-
-
-
-        // wObMob->UnLockAccess();
-
-        
+    }      
     
-    
-
- 
   return true;
 }
 

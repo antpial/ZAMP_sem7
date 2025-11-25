@@ -1,21 +1,15 @@
-#define ROTATE_SPEED     30
-/*
- *  Przykladowy zestaw polecen
- */
- // Set   Ob_A 2 0 30 0 0 0      // Polozenie i orientacja obiektu A 
- // Set   Ob_B 10 10 0 20 10 0   // Polozenie i orientacja obiektu B
-  //Rotate Ob_B OX ROTATE_SPEED 40
 
- // Pause  1000 
-  
-  //Begin_Parallel_Actions                 /* Zawieszenie na 1 sek. */
-  //  Move   Ob_A  10 10
- //   Rotate Ob_B OZ ROTATE_SPEED 60 /* Gdyby Rotate i Move wykonywane byloby */
-  //  Move   Ob_B 10 20   
- // End_Parallel_Actions           /* jednoczesnie, to powodowaloby to      */
-                                 /* przesuniecie po luku                  */
+Pause Kadlub 2000
+Set Kadlub 0 0 -1 0 0 0
+Pause Kadlub 2000
 
+Begin_Parallel_Actions 
+  Move   Kadlub 1 10
+  Rotate Kadlub OZ 9 90
+  Rotate Kadlub.Kolumna.Smiglo OZ 180 1800
+End_Parallel_Actions
 
-Move   Kadlub  1 10
+  Rotate Kadlub OX 90 90
+  Move Kadlub 2 10
 
 

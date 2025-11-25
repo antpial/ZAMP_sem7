@@ -55,6 +55,9 @@ class Interp4Move: public AbstractInterp4Command {
    */
   virtual const char* GetCmdName() const override;
 
+  inline const char* GetObjName() const override {return _nazwa_obiektu.c_str();};
+
+
   /*!
    * \brief Wykonuje polecenie oraz wizualizuje jego realizację
    *

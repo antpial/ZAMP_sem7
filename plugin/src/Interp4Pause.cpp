@@ -1,5 +1,7 @@
 #include <iostream>
 #include "Interp4Pause.hh"
+#include <unistd.h>
+
 
 
 using std::cout;
@@ -64,6 +66,23 @@ bool Interp4Pause::ExecCmd( AbstractScene      &rScn,
   /*
    *  Tu trzeba napisać odpowiedni kod.
    */
+
+    AbstractMobileObj* wObMob = rScn.FindMobileObj(this->_nazwa_obiektu.c_str());
+
+    if( wObMob == nullptr )
+    {
+        std::cerr<<"Nie mogę znaleźć obiektu: "<<this->_nazwa_obiektu.c_str()<<std::endl;
+        return false;
+    }
+
+    rComChann.LockAccess();
+    usleep(this->_czas_pauzy_ms * 1000);
+    rComChann.UnlockAccess();
+
+
+
+
+
   return true;
 }
 
@@ -77,7 +96,7 @@ bool Interp4Pause::ReadParams(std::istream& Strm_CmdsList)
    *  Tu trzeba napisać odpowiedni kod.
    */
 
-  Strm_CmdsList >> _czas_pauzy_ms;
+  Strm_CmdsList >> _nazwa_obiektu >> _czas_pauzy_ms;
 
   return true;
 }
@@ -97,5 +116,5 @@ AbstractInterp4Command* Interp4Pause::CreateCmd()
  */
 void Interp4Pause::PrintSyntax() const
 {
-  cout << "   Pause Czas_pauzy_ms" << endl;
+  cout << "   Pause Nazwa_obiektu Czas_pauzy_ms" << endl;
 }

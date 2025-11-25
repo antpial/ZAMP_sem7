@@ -8,6 +8,8 @@
 
 #include "AbstractInterp4Command.hh"
 
+#define N 100
+
 /*!
  * \file
  * \brief Definicja klasy Interp4Move
@@ -53,6 +55,8 @@ class Interp4Rotate: public AbstractInterp4Command {
    * \brief Wyświetla nazwę polecenia
    */
   virtual const char* GetCmdName() const override;
+
+  inline const char* GetObjName() const override {return _nazwa_obiektu.c_str();};
 
   /*!
    * \brief Wykonuje polecenie oraz wizualizuje jego realizację

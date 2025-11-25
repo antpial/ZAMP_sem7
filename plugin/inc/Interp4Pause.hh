@@ -26,6 +26,7 @@ class Interp4Pause: public AbstractInterp4Command {
    *  do przechowywania wartości parametrów danego polecenia.
    *  Ponieżej zdefiniowane jest tylko jedno pole jako przykład.
    */
+  std::string _nazwa_obiektu;
   double  _czas_pauzy_ms;
  public:
   /*!
@@ -49,6 +50,9 @@ class Interp4Pause: public AbstractInterp4Command {
    * \brief Wyświetla nazwę polecenia
    */
   virtual const char* GetCmdName() const override;
+
+  inline const char* GetObjName() const override {return _nazwa_obiektu.c_str();};
+
 
   /*!
    * \brief Wykonuje polecenie oraz wizualizuje jego realizację

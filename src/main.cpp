@@ -20,12 +20,12 @@
 #include <unistd.h>
 #include "Scene.hh"
 #include "ComChannel.hh"
+#include <thread>
 
 #define COM_FILE_NAME "opis_dzialan.cmd"
 
 using namespace std;
 using namespace xercesc;
-
 
 
 int main()
@@ -90,35 +90,32 @@ int main()
   AbstractInterp4Command * cmd;
   std::string order;
   bool inParallel = false;
+  std::vector<std::thread> threads;
 
   std:: cout << "\nRealizuje kolejne komendy: \n";
-
   while(stream >> order){
     if (order == "Begin_Parallel_Actions") {
+        cout << "\nZaczynam wykonywac watki rownolegle: \n";
         inParallel = true;
     } else if (order == "End_Parallel_Actions") {
         inParallel = false;
-    } else if (inParallel) {
-        // W tej wersji programu pomijam realizację poleceń równoległych
-        std::cout << "\nPolecenie " << order << " pomijane w tej wersji programu.\n";
+        cout << "\nCzekam na watki: \n";
+        for (auto &t : threads) t.join();
+        threads.clear();
+        cout << "\nSkonczylem wykonywac watki rownolegle.\n";
     } else {
         cmd = LibInterfacesMap[order]->_pCreateCmd();
         cmd->ReadParams(stream);
         cmd->PrintCmd();
-        cmd->ExecCmd(scene,"Kadlub",comChannel);
+        if(inParallel){
+          threads.emplace_back([cmd, &scene, &comChannel]{
+              cmd->ExecCmd(scene, cmd->GetObjName(), comChannel);
+          });
+        }else{
+          cmd->ExecCmd(scene,cmd->GetObjName(),comChannel);
+        }
     }
   }
-
-  // while(stream >> order){
-  //   if (order == "Begin_Parallel_Actions" || order == "End_Parallel_Actions") {
-  //       std::cout << "\nPolecenie " << order << " pomijane w tej wersji programu.\n";
-  //   }else{
-  //   cmd = LibInterfacesMap[order]->_pCreateCmd();
-  //   cmd->ReadParams(stream);
-  //   cmd->PrintCmd();
-  //   }
-  // }
-
 
 ////////////////////////////////////////
 // Usuwam wtyczki

@@ -3,6 +3,7 @@
       <Lib Name="libInterp4Move.so"/>
       <Lib Name="libInterp4Rotate.so"/>
       <Lib Name="libInterp4Pause.so"/>
+      <Lib Name="libInterp4Set.so"/>
    </Plugins>
    <Objects>
      <Cube Name="Kadlub" Shift="0 0.0 0" Scale="1.0 1.0 1.0"
