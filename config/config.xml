@@ -9,7 +9,7 @@
      <Cube Name="Kadlub" Shift="0 0.0 0" Scale="1.0 1.0 1.0"
                  RotXYZ_deg="0 0 0" Trans_m="0 0 0" RGB="255 0 0"/>
      <Cube Name="Kadlub.Kolumna" Shift="0 0 0.0" Scale="0.1 0.1 0.2"
-                                RotXYZ_deg="0 0 0" Trans_m="0 0.0 0.6"/>
+                                RotXYZ_deg="0 0 0" Trans_m="0 0.0 1.0"/>
      <Cube Name="Kadlub.Kolumna.Smiglo" Shift="0 0 0.0"
 	         Scale="0.1 1.5 0.05" Trans_m="0 0.0 0.125"/>
    </Objects>

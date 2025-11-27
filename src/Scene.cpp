@@ -41,9 +41,9 @@ void Scene::loadObjectsFromConfig(){
             cubePtr->ParamsMap.at("RotXYZ_deg")[0],
             cubePtr->ParamsMap.at("RotXYZ_deg")[1],
             cubePtr->ParamsMap.at("RotXYZ_deg")[2],
-            cubePtr->ParamsMap.at("Shift")[0],
-            cubePtr->ParamsMap.at("Shift")[1],
-            cubePtr->ParamsMap.at("Shift")[2]
+            cubePtr->ParamsMap.at("Trans_m")[0],
+            cubePtr->ParamsMap.at("Trans_m")[1],
+            cubePtr->ParamsMap.at("Trans_m")[2]
         );
         AddMobileObj(mobObj);
     }
@@ -96,7 +96,7 @@ std::string Scene::UpdateObj(const AbstractMobileObj* Obje) {
 
         // Najpierw pozycja i rotacja z MobileObj
         const Vector3D &pos = Obj->GetPositoin_m();
-        oss << "Shift=(" 
+        oss << "Trans_m=(" 
             << std::fixed << std::setprecision(2) << pos[0] << "," 
             << pos[1] << "," << pos[2] << ") ";
 
