@@ -52,10 +52,10 @@ The project uses `make` to compile the main executable and all plugin libraries.
 ### Execution
 To launch the entire system (including the graphic server, if configured):
 
-./launch.sh
+      ./launch.sh
 
 📜 Configuration Example (XML)
-
+   
 The config.xml file defines the active plugins and the objects in the scene:
 
 <Scene>
@@ -70,5 +70,5 @@ The config.xml file defines the active plugins and the objects in the scene:
 🎓 Credits
     Project Author: Antoni Piałucha
     Base Code & Supervision: Dr inż. Bogdan Kreczmer (Wrocław University of Science and Technology).
-
-        Educational materials provided for the course included the foundational code for XML parsing, vector mathematics, and the plugin interface skeleton.
+--
+Educational materials provided for the course included the foundational code for XML parsing, vector mathematics, and the plugin interface skeleton.
