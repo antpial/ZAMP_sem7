@@ -5,6 +5,7 @@ This repository contains the final project developed for the **Advanced Programm
 The goal of the project was to create a flexible interpreter for a scripting language capable of controlling a swarm of mobile objects (e.g., drones, helicopters) defined in an XML configuration file. The application operates as a **TCP client**, sending command frames to an external 3D graphic server for real-time visualization.
 
 ![Robot Visualization](config/heli.png)
+
 *Fig 1. Visualization of a mobile robot (helicopter) in the graphic server environment.*
 
 ## 🎯 Project Overview
@@ -68,7 +69,8 @@ The config.xml file defines the active plugins and the objects in the scene:
 </Scene>
 
 🎓 Credits
-    Project Author: Antoni Piałucha
-    Base Code & Supervision: Dr inż. Bogdan Kreczmer (Wrocław University of Science and Technology).
+
+   Project Author: Antoni Piałucha
+   Base Code & Supervision: Dr inż. Bogdan Kreczmer (Wrocław University of Science and Technology).
 --
 Educational materials provided for the course included the foundational code for XML parsing, vector mathematics, and the plugin interface skeleton.
