@@ -69,8 +69,7 @@ The config.xml file defines the active plugins and the objects in the scene:
 </Scene>
 
 🎓 Credits
-
-   Project Author: Antoni Piałucha
-   Base Code & Supervision: Dr inż. Bogdan Kreczmer (Wrocław University of Science and Technology).
+Project Author: Antoni Piałucha 
+Base Code & Supervision: Dr inż. Bogdan Kreczmer (Wrocław University of Science and Technology).
 --
 Educational materials provided for the course included the foundational code for XML parsing, vector mathematics, and the plugin interface skeleton.
